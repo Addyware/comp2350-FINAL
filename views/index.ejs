@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Purchase Items</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body class="section">
+  <div class="container">
+    <h1 class="title has-text-centered">Purchase Items</h1>
+    <div class="notification is-info has-text-centered">
+      <strong>Total Cost:</strong> $<%= summary.total_cost ? summary.total_cost.toFixed(2) : '0.00' %> |
+      <strong>Unique Items:</strong> <%= summary.total_items %>
+    </div>
+
+    <!-- Purchase Item Table -->
+    <table class="table is-fullwidth is-hoverable is-striped">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Description</th>
+          <th>Cost</th>
+          <th>Quantity</th>
+          <th class="has-text-centered">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(item => { %>
+          <tr>
+            <td><%= item.item_name %></td>
+            <td><%= item.item_description %></td>
+            <td>$<%= item.cost.toFixed(2) %></td>
+            <td><%= item.quantity %></td>
+            <td class="has-text-centered">
+              <!-- Trash bin (Delete item) -->
+              <form method="POST" action="/delete/<%= item.purchase_item_id %>" class="is-inline">
+                <button class="button is-danger is-small" title="Delete Item">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+              <!-- Up (Increase quantity) -->
+              <form method="POST" action="/up/<%= item.purchase_item_id %>" class="is-inline">
+                <button class="button is-success is-small" title="Increase Quantity">
+                  <i class="fas fa-caret-square-up"></i>
+                </button>
+              </form>
+              <!-- Down (Decrease quantity) -->
+              <form method="POST" action="/down/<%= item.purchase_item_id %>" class="is-inline">
+                <button class="button is-warning is-small" title="Decrease Quantity">
+                  <i class="fas fa-caret-square-down"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <!-- Add New Purchase Item Form -->
+    <div class="box">
+      <h2 class="subtitle">Add a New Item</h2>
+      <form method="POST" action="/add">
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Item Name</label>
+              <div class="control">
+                <input class="input" type="text" name="item_name" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="field">
+              <label class="label">Description</label>
+              <div class="control">
+                <input class="input" type="text" name="item_description" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Cost</label>
+              <div class="control">
+                <input class="input" type="number" name="cost" step="0.0001" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="field">
+              <label class="label">Quantity</label>
+              <div class="control">
+                <input class="input" type="number" name="quantity" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="control has-text-centered">
+          <button class="button is-primary">Add Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
